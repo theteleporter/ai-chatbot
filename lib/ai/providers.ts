@@ -3,8 +3,7 @@ import {
   extractReasoningMiddleware,
   wrapLanguageModel,
 } from 'ai';
-import { openai } from '@ai-sdk/openai';
-import { fireworks } from '@ai-sdk/fireworks';
+import { groq } from '@ai-sdk/groq';
 import { xai } from '@ai-sdk/xai';
 import { isTestEnvironment } from '../constants';
 import {
@@ -27,14 +26,13 @@ export const myProvider = isTestEnvironment
       languageModels: {
         'chat-model': xai('grok-2-1212'),
         'chat-model-reasoning': wrapLanguageModel({
-          model: fireworks('accounts/fireworks/models/deepseek-r1'),
+          model: groq('deepseek-r1-distill-llama-70b'),
           middleware: extractReasoningMiddleware({ tagName: 'think' }),
         }),
         'title-model': xai('grok-2-1212'),
         'artifact-model': xai('grok-2-1212'),
       },
       imageModels: {
-        'small-model': openai.image('dall-e-2'),
-        'large-model': openai.image('dall-e-3'),
+        'small-model': xai.image('grok-2-image'),
       },
     });
