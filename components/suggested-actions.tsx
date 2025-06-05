@@ -2,18 +2,21 @@
 
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
-import { ChatRequestOptions, CreateMessage, Message } from 'ai';
 import { memo } from 'react';
+import type { UseChatHelpers } from '@ai-sdk/react';
+import type { VisibilityType } from './visibility-selector';
 
 interface SuggestedActionsProps {
   chatId: string;
-  append: (
-    message: Message | CreateMessage,
-    chatRequestOptions?: ChatRequestOptions,
-  ) => Promise<string | null | undefined>;
+  append: UseChatHelpers['append'];
+  selectedVisibilityType: VisibilityType;
 }
 
-function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
+function PureSuggestedActions({
+  chatId,
+  append,
+  selectedVisibilityType,
+}: SuggestedActionsProps) {
   const suggestedActions = [
     {
       title: 'What are the advantages',
@@ -74,4 +77,13 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
   );
 }
 
-export const SuggestedActions = memo(PureSuggestedActions, () => true);
+export const SuggestedActions = memo(
+  PureSuggestedActions,
+  (prevProps, nextProps) => {
+    if (prevProps.chatId !== nextProps.chatId) return false;
+    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
+      return false;
+
+    return true;
+  },
+);
